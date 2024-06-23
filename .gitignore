@@ -1,2 +1,6 @@
 venv/
 database.db
+comandos-sql.py
+clientes.xlsx
+pycache
+__pycache__

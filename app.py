@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from clientes.clientes import clientes_blueprint
+from produtos.produtos import produtos_blueprint
 
 
 app = Flask(__name__)
 app.register_blueprint(clientes_blueprint)
+app.register_blueprint(produtos_blueprint)
 
 
 app.secret_key = '666666'
