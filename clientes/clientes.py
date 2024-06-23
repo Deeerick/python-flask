@@ -14,12 +14,24 @@ def get_db_connection():
 @clientes_blueprint.route('/clientes')
 def clientes():
     if 'username' in session:
+        # Parâmetros de paginação
+        page = request.args.get('page', 1, type=int)
+        per_page = 10  # Número de registros por página
+        offset = (page - 1) * per_page
+
         conn = get_db_connection()
-        listar_clientes = conn.execute('SELECT * FROM clientes').fetchall()
+        listar_clientes = conn.execute('SELECT * FROM clientes LIMIT ? OFFSET ?', (per_page, offset)).fetchall()
+
+        # Obter o total de registros para calcular o número de páginas
+        total_clientes = conn.execute('SELECT COUNT(*) FROM clientes').fetchone()[0]
         conn.close()
-        return render_template('clientes.html', clientes=listar_clientes, route_name='clientes')
+
+        total_pages = (total_clientes + per_page - 1) // per_page
+
+        return render_template('clientes.html', clientes=listar_clientes, page=page, total_pages=total_pages, route_name='clientes')
     else:
-        return redirect(url_for('clientes.login'))
+        return redirect(url_for('login'))
+
 
 
 @clientes_blueprint.route('/novo_cliente', methods=['GET', 'POST'])
