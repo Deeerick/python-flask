@@ -50,3 +50,20 @@ def eliminar_cliente(cliente_id):
     conn.close()
     flash('Cliente eliminado com sucesso!', 'danger')
     return redirect(url_for('clientes.clientes'))
+
+
+@clientes_blueprint.route('/procurar_clientes', methods=['GET'])
+def procurar_clientes():
+    if 'username' in session:
+        query = request.args.get('query', '')
+
+        conn = get_db_connection()
+        listar_clientes = conn.execute("""
+            SELECT * FROM clientes
+            WHERE nome LIKE ? OR endereco LIKE ? OR telefone LIKE ? OR interesse LIKE ?
+        """, ('%' + query + '%', '%' + query + '%', '%' + query + '%', '%' + query + '%')).fetchall()
+        conn.close()
+
+        return render_template('clientes.html', clientes=listar_clientes, route_name='clientes')
+    else:
+        return redirect(url_for('login'))
