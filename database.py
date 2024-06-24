@@ -16,5 +16,14 @@ cursor.execute('''
 ''')
 
 
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS vendas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome_produto TEXT NOT NULL,
+        valor_produto INTEGER NOT NULL
+    )
+''')
+
+
 conn.commit()
 conn.close()
